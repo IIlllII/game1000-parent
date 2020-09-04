@@ -11,14 +11,14 @@ class BimatrixSolverTest {
     @Test
     fun testFindAllEqWithDegeneracy() {
         val program = BimatrixSolver()
-        val payoff1 = arrayOf<Array<Rational>>(arrayOf<Rational>(Rational.valueOf("3"), Rational.valueOf("3")), arrayOf<Rational>(Rational.valueOf("2"), Rational.valueOf("5")), arrayOf<Rational>(Rational.valueOf("0"), Rational.valueOf("6")))
+        val payoff1 = arrayOf(arrayOf(Rational.valueOf("3"), Rational.valueOf("3")), arrayOf(Rational.valueOf("2"), Rational.valueOf("5")), arrayOf(Rational.valueOf("0"), Rational.valueOf("6")))
 
-        val payoff2 = arrayOf<Array<Rational>>(arrayOf<Rational>(Rational.valueOf("3"), Rational.valueOf("3")), arrayOf<Rational>(Rational.valueOf("2"), Rational.valueOf("6")), arrayOf<Rational>(Rational.valueOf("3"), Rational.valueOf("1")))
+        val payoff2 = arrayOf(arrayOf(Rational.valueOf("3"), Rational.valueOf("3")), arrayOf(Rational.valueOf("2"), Rational.valueOf("6")), arrayOf(Rational.valueOf("3"), Rational.valueOf("1")))
 
-        val probs1 = arrayOf<Array<Rational>>(arrayOf<Rational>(Rational.valueOf("1"), Rational.valueOf("0"), Rational.valueOf("0")), arrayOf<Rational>(Rational.valueOf("1"), Rational.valueOf("0"), Rational.valueOf("0")), arrayOf<Rational>(Rational.valueOf("0"), Rational.valueOf("1/3"), Rational.valueOf("2/3")))
-        val probs2 = arrayOf<Array<Rational>>(arrayOf<Rational>(Rational.valueOf("1"), Rational.valueOf("0")), arrayOf<Rational>(Rational.valueOf("2/3"), Rational.valueOf("1/3")), arrayOf<Rational>(Rational.valueOf("1/3"), Rational.valueOf("2/3")))
-        val epayoffs1 = arrayOf<Rational>(Rational.valueOf("3"), Rational.valueOf("3"), Rational.valueOf("4"))
-        val epayoffs2 = arrayOf<Rational>(Rational.valueOf("3"), Rational.valueOf("3"), Rational.valueOf("8/3"))
+        val probs1 = arrayOf(arrayOf(Rational.valueOf("1"), Rational.valueOf("0"), Rational.valueOf("0")), arrayOf(Rational.valueOf("1"), Rational.valueOf("0"), Rational.valueOf("0")), arrayOf(Rational.valueOf("0"), Rational.valueOf("1/3"), Rational.valueOf("2/3")))
+        val probs2 = arrayOf(arrayOf(Rational.valueOf("1"), Rational.valueOf("0")), arrayOf(Rational.valueOf("2/3"), Rational.valueOf("1/3")), arrayOf(Rational.valueOf("1/3"), Rational.valueOf("2/3")))
+        val epayoffs1 = arrayOf(Rational.valueOf("3"), Rational.valueOf("3"), Rational.valueOf("4"))
+        val epayoffs2 = arrayOf(Rational.valueOf("3"), Rational.valueOf("3"), Rational.valueOf("8/3"))
 
         val lrs = LrsAlgorithm()
         val eqs = program.findAllEq(lrs, payoff1, payoff2)
@@ -28,14 +28,14 @@ class BimatrixSolverTest {
     @Test
     fun testFindAllEqNoDegeneracy() {
         val program = BimatrixSolver()
-        val payoff1 = arrayOf<Array<Rational>>(arrayOf<Rational>(Rational.valueOf("3"), Rational.valueOf("3")), arrayOf<Rational>(Rational.valueOf("2"), Rational.valueOf("5")), arrayOf<Rational>(Rational.valueOf("0"), Rational.valueOf("6")))
+        val payoff1 = arrayOf(arrayOf(Rational.valueOf("3"), Rational.valueOf("3")), arrayOf(Rational.valueOf("2"), Rational.valueOf("5")), arrayOf(Rational.valueOf("0"), Rational.valueOf("6")))
 
-        val payoff2 = arrayOf<Array<Rational>>(arrayOf<Rational>(Rational.valueOf("3"), Rational.valueOf("2")), arrayOf<Rational>(Rational.valueOf("2"), Rational.valueOf("6")), arrayOf<Rational>(Rational.valueOf("3"), Rational.valueOf("1")))
+        val payoff2 = arrayOf(arrayOf(Rational.valueOf("3"), Rational.valueOf("2")), arrayOf(Rational.valueOf("2"), Rational.valueOf("6")), arrayOf(Rational.valueOf("3"), Rational.valueOf("1")))
 
-        val probs1 = arrayOf<Array<Rational>>(arrayOf<Rational>(Rational.valueOf("1"), Rational.valueOf("0"), Rational.valueOf("0")), arrayOf<Rational>(Rational.valueOf("4/5"), Rational.valueOf("1/5"), Rational.valueOf("0")), arrayOf<Rational>(Rational.valueOf("0"), Rational.valueOf("1/3"), Rational.valueOf("2/3")))
-        val probs2 = arrayOf<Array<Rational>>(arrayOf<Rational>(Rational.valueOf("1"), Rational.valueOf("0")), arrayOf<Rational>(Rational.valueOf("2/3"), Rational.valueOf("1/3")), arrayOf<Rational>(Rational.valueOf("1/3"), Rational.valueOf("2/3")))
-        val epayoffs1 = arrayOf<Rational>(Rational.valueOf("3"), Rational.valueOf("9/3"), Rational.valueOf("4"))
-        val epayoffs2 = arrayOf<Rational>(Rational.valueOf("3"), Rational.valueOf("14/5"), Rational.valueOf("8/3"))
+        val probs1 = arrayOf(arrayOf(Rational.valueOf("1"), Rational.valueOf("0"), Rational.valueOf("0")), arrayOf(Rational.valueOf("4/5"), Rational.valueOf("1/5"), Rational.valueOf("0")), arrayOf(Rational.valueOf("0"), Rational.valueOf("1/3"), Rational.valueOf("2/3")))
+        val probs2 = arrayOf(arrayOf(Rational.valueOf("1"), Rational.valueOf("0")), arrayOf(Rational.valueOf("2/3"), Rational.valueOf("1/3")), arrayOf(Rational.valueOf("1/3"), Rational.valueOf("2/3")))
+        val epayoffs1 = arrayOf(Rational.valueOf("3"), Rational.valueOf("9/3"), Rational.valueOf("4"))
+        val epayoffs2 = arrayOf(Rational.valueOf("3"), Rational.valueOf("14/5"), Rational.valueOf("8/3"))
 
         val lrs = LrsAlgorithm()
         val eqs = program.findAllEq(lrs, payoff1, payoff2)

@@ -34,7 +34,7 @@ object BigIntSerializer : KSerializer<BigInteger> {
 @Serializable
 data class Rational(
         @Serializable(with = BigIntSerializer::class) var num: BigInteger,
-        @Serializable(with = BigIntSerializer::class) var den: BigInteger) {
+        @Serializable(with = BigIntSerializer::class) var den: BigInteger) : Comparable<Rational> {
 
     init {
         if (zero(den)) {
@@ -161,7 +161,7 @@ data class Rational(
         return rv
     }
 
-    operator fun compareTo(other: Rational): Int {
+    override operator fun compareTo(other: Rational): Int {
         if (num == other.num && den == other.den)
             return 0
 
