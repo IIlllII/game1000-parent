@@ -90,3 +90,9 @@ for running comparisons.
 
 The structure of these depend on the kind of solution, so each type of solution
 may use different formats.
+
+### Human games
+Under ```game1000-solver/analysis``` are some games played by humans. Some day I will try and
+see how humans play, compared to the different algorithmic approaches.
+
+I need to filter games where people just pressed random crap though, seems there are some of those.
