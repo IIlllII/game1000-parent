@@ -1,0 +1,8 @@
+*.svn
+.idea
+**/target
+*.iml
+.DS_Store
+logs
+game1000-web/logs
+game1000-web/*.json
