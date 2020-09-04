@@ -15,11 +15,11 @@ Should build things,
 Then running the main methods under ```runner``` should pit some strategies against
 each other. Files with relative paths are accessed when running, so ensure you run from the base directory.
 
-##TODO
+## TODO
 * Look into solving a subgame case by creating the full normal form representation, and finding the best equilibria
 * MCTS seems to not play well at all, might be buggy.
 
-##Strategy comparison
+## Strategy comparison
 This is the main method of the project, which easily allows varying
 strategies to be compared.
 
