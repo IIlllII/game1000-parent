@@ -216,6 +216,31 @@ class TwoPlayerGameTest {
         assertEquals(listOf(1),game.minMaxStrategies(Player.ROW))
         assertEquals(listOf(1),game.minMaxStrategies(Player.COLUMN))
 
+        assertEquals(listOf("C"),game.maxMinStrategyIds(Player.ROW))
+        assertEquals(listOf("C"),game.maxMinStrategyIds(Player.COLUMN))
+        assertEquals(listOf("C"),game.minMaxStrategyIds(Player.ROW))
+        assertEquals(listOf("C"),game.minMaxStrategyIds(Player.COLUMN))
+
+    }
+
+    @Test
+    fun `ex 6_3 solution`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("A","B")
+            row("A") { p(0, 1); p(1, 1) }
+            row("B") { p(1, 1); p(1, 0) }
+        }
+
+        val eq = game.pureNashEquilibriums().toSet()
+
+        assertEquals( setOf(Pair(1,0),Pair(0,1)),eq)
+        assertEquals(1.R,game.maxMin(Player.ROW))
+        assertEquals(1.R,game.maxMin(Player.COLUMN))
+        assertEquals(1.R,game.minMax(Player.ROW))
+        assertEquals(1.R,game.minMax(Player.COLUMN))
+
+
     }
 
 }

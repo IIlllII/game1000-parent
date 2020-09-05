@@ -2,6 +2,7 @@ package gametheory
 
 import bimatrix.R
 import lcp.Rational
+import java.lang.IllegalArgumentException
 import java.lang.RuntimeException
 
 /*
@@ -50,7 +51,11 @@ class TwoPlayerGame private constructor(
         private val rows : List<List<Payoff>>,
         private val rowMap : Map<String,Int>,
         private val colMap : Map<String,Int>) {
+
     private val cols : ArrayList<ArrayList<Payoff>>
+
+    val indexToRowId : Map<Int,String> = rowMap.entries.map { i-> Pair(i.value,i.key) }.toMap()
+    val indexToColumnId : Map<Int,String> = colMap.entries.map { i-> Pair(i.value,i.key) }.toMap()
 
     companion object {
         fun create(vararg init : RowScope.() -> Unit) : TwoPlayerGame {
@@ -149,6 +154,14 @@ class TwoPlayerGame private constructor(
         }
     }
 
+
+    fun getRowOrColumnId(player:Player, id :Int) : String {
+        return when(player) {
+            Player.ROW -> indexToRowId[id] ?: throw IllegalArgumentException("No row with id $id for player $player")
+            Player.COLUMN -> indexToColumnId[id] ?: throw IllegalArgumentException("No row with id $id for player $player")
+        }
+    }
+
     fun getRowOrColumn(player:Player, id :String) : Int {
         return when(player) {
             Player.ROW -> getRow(id)
@@ -217,6 +230,10 @@ class TwoPlayerGame private constructor(
         }
     }
 
+    fun maxMinStrategyIds(player: Player) : List<String> {
+        return maxMinStrategies(player).map { i -> getRowOrColumnId(player,i) }
+    }
+
     fun maxMinStrategies(player: Player) : List<Int> {
         val maxMin = maxMin(player)
         return when(player) {
@@ -241,6 +258,10 @@ class TwoPlayerGame private constructor(
             Player.ROW -> cols.map { i -> i.map { j -> j.a }.maxOrNull() as Rational }.minOrNull() as Rational
             Player.COLUMN -> rows.map { i -> i.map { j -> j.b }.maxOrNull() as Rational }.minOrNull() as Rational
         }
+    }
+
+    fun minMaxStrategyIds(player: Player) : List<String> {
+        return minMaxStrategies(player).map { i -> getRowOrColumnId(player,i) }
     }
 
     fun minMaxStrategies(player: Player) : List<Int> {
