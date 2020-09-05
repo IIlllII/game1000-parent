@@ -106,6 +106,11 @@ class TwoPlayerGame private constructor(
         return "TwoPlayerGame(rows=$rows)"
     }
 
+    fun pureNashEquilibriumIds() : List<Pair<String,String>> {
+        return pureNashEquilibriums().map {
+            eq -> Pair(getRowOrColumnId(Player.ROW,eq.first),getRowOrColumnId(Player.COLUMN,eq.second))
+        }
+    }
 
     fun pureNashEquilibriums() : List<Pair<Int,Int>> {
         return rows.indices.flatMap {i->

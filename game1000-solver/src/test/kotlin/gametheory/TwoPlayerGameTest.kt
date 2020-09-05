@@ -233,13 +233,13 @@ class TwoPlayerGameTest {
         }
 
         val eq = game.pureNashEquilibriums().toSet()
-
+        val textual = game.pureNashEquilibriumIds().toSet()
         assertEquals( setOf(Pair(1,0),Pair(0,1)),eq)
+        assertEquals( setOf(Pair("B","A"),Pair("A","B")),textual)
         assertEquals(1.R,game.maxMin(Player.ROW))
         assertEquals(1.R,game.maxMin(Player.COLUMN))
         assertEquals(1.R,game.minMax(Player.ROW))
         assertEquals(1.R,game.minMax(Player.COLUMN))
-
 
     }
 
