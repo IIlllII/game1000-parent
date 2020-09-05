@@ -102,7 +102,7 @@ class TwoPlayerGame private constructor(
     }
 
 
-    fun nashEquilibriums() : List<Pair<Int,Int>> {
+    fun pureNashEquilibriums() : List<Pair<Int,Int>> {
         return rows.indices.flatMap {i->
             cols.indices.flatMap { j->
                 if(isNashEquilibrium(i,j)) {
@@ -208,6 +208,57 @@ class TwoPlayerGame private constructor(
 
     fun getColumn(id : Int) : List<Payoff> {
         return cols[id]
+    }
+
+    fun maxMin(player: Player) : Rational {
+        return when(player) {
+            Player.ROW -> rows.map { i -> i.map { j -> j.a }.minOrNull() as Rational }.maxOrNull() as Rational
+            Player.COLUMN -> cols.map { i -> i.map { j -> j.b }.minOrNull() as Rational }.maxOrNull() as Rational
+        }
+    }
+
+    fun maxMinStrategies(player: Player) : List<Int> {
+        val maxMin = maxMin(player)
+        return when(player) {
+            Player.ROW -> {
+                rows
+                        .mapIndexed { idx,i -> Pair(idx,i.map { j -> j.a }.minOrNull()) }
+                        .filter { i->i.second == maxMin }
+                        .map { i->i.first }
+            }
+            Player.COLUMN -> {
+                cols
+                        .mapIndexed { idx,i -> Pair(idx,i.map { j -> j.b }.minOrNull()) }
+                        .filter { i -> i.second == maxMin }
+                        .map { i -> i.first }
+            }
+        }
+    }
+
+
+    fun minMax(player: Player) : Rational {
+        return when (player) {
+            Player.ROW -> cols.map { i -> i.map { j -> j.a }.maxOrNull() as Rational }.minOrNull() as Rational
+            Player.COLUMN -> rows.map { i -> i.map { j -> j.b }.maxOrNull() as Rational }.minOrNull() as Rational
+        }
+    }
+
+    fun minMaxStrategies(player: Player) : List<Int> {
+        val minMax = minMax(player)
+        return when(player) {
+            Player.ROW -> {
+                cols
+                        .mapIndexed { idx,i -> Pair(idx,i.map { j -> j.a }.maxOrNull()) }
+                        .filter { i->i.second == minMax }
+                        .map { i->i.first }
+            }
+            Player.COLUMN -> {
+                rows
+                        .mapIndexed { idx,i -> Pair(idx,i.map { j -> j.b }.maxOrNull()) }
+                        .filter { i -> i.second == minMax }
+                        .map { i -> i.first }
+            }
+        }
     }
 
 

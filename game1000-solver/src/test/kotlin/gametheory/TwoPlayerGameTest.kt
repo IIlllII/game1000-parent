@@ -2,6 +2,7 @@ package gametheory
 
 import bimatrix.R
 import org.junit.Test
+import utils.unaryMinus
 import kotlin.test.assertEquals
 
 /*
@@ -142,7 +143,7 @@ class TwoPlayerGameTest {
             row("C") { p(1, 1); p(-1, -1); p(2, 2) }
         }
 
-        assertEquals(1,game.nashEquilibriums().size)
+        assertEquals(1,game.pureNashEquilibriums().size)
         assertEquals(false,game.isNashEquilibrium("A","C"))
         assertEquals(false,game.isNashEquilibrium("C","A"))
 
@@ -162,7 +163,7 @@ class TwoPlayerGameTest {
             row("C") { p(1, 1); p(0, 0); p(2, 2) }
         }
 
-        val eq = game.nashEquilibriums()
+        val eq = game.pureNashEquilibriums()
 
         assertEquals(1,eq.size)
         assertEquals(true,game.isNashEquilibrium("C","C"))
@@ -182,7 +183,7 @@ class TwoPlayerGameTest {
             row("B") { p(2, 2); p(3, 3) }
         }
 
-        val eq = game.nashEquilibriums()
+        val eq = game.pureNashEquilibriums()
 
         assertEquals(2,eq.size)
         assertEquals(true,game.isNashEquilibrium("A","A"))
@@ -193,5 +194,28 @@ class TwoPlayerGameTest {
 
     }
 
+
+    @Test
+    fun `maxMin and minMax of modified prisoners dilemma`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("NC","C")
+            row("NC") { p(-3, -3); p(-8, -2) }
+            row("C") { p(-1, -8); p(-6, -6) }
+        }
+
+        val eq = game.pureNashEquilibriums()
+
+        assertEquals(1,eq.size)
+        assertEquals((-6).R,game.maxMin(Player.ROW))
+        assertEquals((-6).R,game.maxMin(Player.COLUMN))
+        assertEquals((-6).R,game.minMax(Player.ROW))
+        assertEquals((-6).R,game.minMax(Player.COLUMN))
+        assertEquals(listOf(1),game.maxMinStrategies(Player.ROW))
+        assertEquals(listOf(1),game.maxMinStrategies(Player.COLUMN))
+        assertEquals(listOf(1),game.minMaxStrategies(Player.ROW))
+        assertEquals(listOf(1),game.minMaxStrategies(Player.COLUMN))
+
+    }
 
 }
