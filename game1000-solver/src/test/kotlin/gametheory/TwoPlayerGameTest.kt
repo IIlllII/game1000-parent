@@ -174,7 +174,7 @@ class TwoPlayerGameTest {
 
 
     @Test
-    fun `single weak or equilibirum, and one only nash`() {
+    fun `one single weak equilibirum, and one only nash`() {
 
         val game = TwoPlayerGame.create {
             columnLabels("A","B")

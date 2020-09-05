@@ -39,7 +39,7 @@ class RowScope(val row : ArrayList<Payoff>) {
     fun p(a:Int,b:Int) {
         row.add(Payoff(a.R,b.R))
     }
-    
+
 }
 
 enum class Player {ROW,COLUMN}
