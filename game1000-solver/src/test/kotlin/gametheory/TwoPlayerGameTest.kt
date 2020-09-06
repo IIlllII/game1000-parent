@@ -243,4 +243,37 @@ class TwoPlayerGameTest {
 
     }
 
+    @Test
+    fun `ex solution`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("A","B")
+            row("A") { p(1, 0); p(0, 1) }
+            row("B") { p(0, 1); p(0, 0) }
+        }
+
+        val eq = game.pureNashEquilibriums().toSet()
+        assertEquals(eq.size,1)
+        assertEquals(eq, setOf(Pair(0,1)))
+        assertEquals(false,game.isWeaklyDominantStrategyEquilibrium("A","B"))
+
+    }
+
+
+    @Test
+    fun `maxmin minmax example`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("A","B")
+            row("A") { p(4, 1); p(0, 4) }
+            row("B") { p(1, 5); p(1, 1) }
+        }
+
+        assertEquals(4.R,game.minMax(Player.COLUMN))
+        assertEquals(1.R,game.maxMin(Player.COLUMN))
+
+        assertEquals(1.R,game.minMax(Player.ROW))
+        assertEquals(1.R,game.maxMin(Player.ROW))
+    }
+
 }
