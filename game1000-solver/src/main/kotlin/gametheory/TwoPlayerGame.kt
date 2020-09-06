@@ -202,8 +202,33 @@ class TwoPlayerGame private constructor(
         return conditionTrueForAll(player,id) { a, b -> a > b }
     }
 
+    fun isStronglyDominantStrategyEquilibrium(row : Int, col : Int) : Boolean {
+        return isStronglyDominantStrategy(Player.ROW,row) && isStronglyDominantStrategy(Player.COLUMN,col)
+    }
+
+    fun isStronglyDominantStrategyEquilibrium(row : String, col : String) : Boolean {
+        return isStronglyDominantStrategyEquilibrium(getRowOrColumn(Player.ROW,row),getRowOrColumn(Player.COLUMN,col))
+    }
+
+
     fun isWeaklyDominantStrategy(player : Player, id : String) : Boolean {
         return isWeaklyDominantStrategy(player,getRowOrColumn(player,id))
+    }
+
+    fun isWeaklyDominantEquilibrium(row : Int, col : Int) : Boolean {
+        return isWeaklyDominantStrategy(Player.ROW,row) && isWeaklyDominantStrategy(Player.COLUMN,col)
+    }
+
+    fun isWeaklyDominantStrategyEquilibrium(row : String, col : String) : Boolean {
+        return isWeaklyDominantEquilibrium(getRowOrColumn(Player.ROW,row),getRowOrColumn(Player.COLUMN,col))
+    }
+
+    fun isVeryWeaklyDominantStrategyEquilibrium(row : Int, col : Int) : Boolean {
+        return isVeryWeaklyDominantStrategy(Player.ROW,row) && isVeryWeaklyDominantStrategy(Player.COLUMN,col)
+    }
+
+    fun isVeryWeaklyDominantStrategyEquilibrium(row : String, col : String) : Boolean {
+        return isVeryWeaklyDominantStrategyEquilibrium(getRowOrColumn(Player.ROW,row),getRowOrColumn(Player.COLUMN,col))
     }
 
     fun isWeaklyDominantStrategy(player : Player, id : Int) : Boolean {
