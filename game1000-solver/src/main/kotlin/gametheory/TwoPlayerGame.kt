@@ -384,26 +384,22 @@ class TwoPlayerGame private constructor(
 
 
 
-    fun rowIsDominated(a : Int) : Boolean {
-        val check = rows.indices.toSet().minus(a)
-        val doms = check.map { row ->
-            val comp = rows[row].mapIndexed { idx, pf ->
-                rows[a][idx].a <= pf.a
-            }
-            comp.all { it }
-        }
-        return doms.any { it }
+    fun rowIsDominated(r : Int) : Boolean {
+        val exceptRow = rows.indices.toSet().minus(r)
+        return exceptRow.map { row ->
+            rows[row].mapIndexed { idx, pf ->
+                rows[r][idx].a <= pf.a
+            }.all { it }
+        }.any { it }
     }
 
-    fun columnIsDominated(a : Int) : Boolean {
-        val check = cols.indices.toSet().minus(a)
-        val doms = check.map { row ->
-            val res = cols[row].mapIndexed { idx, pf ->
-                cols[a][idx].b <= pf.b
-            }
-            res.all { it }
-        }
-        return doms.any { it }
+    fun columnIsDominated(c : Int) : Boolean {
+        val exceptCol = cols.indices.toSet().minus(c)
+        return exceptCol.map { col ->
+            cols[col].mapIndexed { idx, pf ->
+                cols[c][idx].b <= pf.b
+            }.all { it }
+        }.any { it }
     }
 
 
