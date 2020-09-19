@@ -9,7 +9,7 @@ import getFinalStates
 import getPermutations
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
-import lcp.Rational
+import lcp.*
 import lrs.LrsAlgorithm
 import org.pcollections.ConsPStack
 import org.slf4j.LoggerFactory

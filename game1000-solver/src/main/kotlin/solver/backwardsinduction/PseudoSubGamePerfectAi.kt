@@ -11,9 +11,7 @@ import lrs.LrsAlgorithm
 import org.slf4j.LoggerFactory
 import placementPermutations
 import solver.models.*
-import utils.plus
 import utils.swap
-import utils.unaryMinus
 import java.math.BigInteger
 
 

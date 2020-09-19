@@ -2,8 +2,9 @@ package gametheory
 
 import bimatrix.R
 import org.junit.Test
-import utils.unaryMinus
+import utils.BF
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 /*
  * Copyright (c) Jonas Waage 04/09/2020
@@ -276,4 +277,82 @@ class TwoPlayerGameTest {
         assertEquals(1.R,game.maxMin(Player.ROW))
     }
 
+
+
+    @Test
+    fun `rock paper scissors calculation`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("R","P","S")
+            row("R") { p(0); p(-1); p(1) }
+            row("P") { p(1); p(0); p(-1) }
+            row("S") { p(-1); p(1); p(0) }
+        }
+
+        assertTrue(game.isZeroSum())
+        assertEquals(listOf(Pair("R",1.BF/3),Pair("P",1.BF/3),Pair("S",1.BF/3)),game.solveZeroSumForRowPlayer());
+    }
+
+
+    @Test
+    fun `coin solution calculation`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("R","P")
+            row("R") { p(1); p(-1) }
+            row("P") { p(-1); p(1) }
+        }
+
+        assertTrue(game.isZeroSum())
+        assertEquals(listOf(Pair("R",1.BF/2),Pair("P",1.BF/2)),game.solveZeroSumForRowPlayer());
+
+    }
+
+
+
+    @Test
+    fun `Exercise 9_9 solution`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("A","B")
+            row("A") { p(2); p(3) }
+            row("B") { p(4); p(1) }
+        }
+
+        val solved = game.solveZeroSumForRowPlayer()
+        println(solved)
+
+
+        val game2 = TwoPlayerGame.create {
+            columnLabels("A","B")
+            row("A") { p(-2); p(-4) }
+            row("B") { p(-3); p(-1) }
+        }
+
+        val solved2 = game2.solveZeroSumForRowPlayer()
+        println(solved2)
+
+    }
+
+
+
+    @Test
+    fun `Exercise 9_9 full`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("A","B","C")
+            row("A") { p(2); p(3); p(1) }
+            row("B") { p(4); p(1); p(2) }
+            row("C") { p(4); p(1); p(3) }
+        }
+
+        val solvedRow = game.solveZeroSumForRowPlayer()
+        val solvedCol = game.solveZeroSumForColumnPlayer()
+
+        assertEquals(listOf(Pair("A",1.BF/2),Pair("C",1.BF/2)),solvedRow)
+        assertEquals(listOf(Pair("B",1.BF/2),Pair("C",1.BF/2)),solvedCol)
+
+
+    }
 }
+

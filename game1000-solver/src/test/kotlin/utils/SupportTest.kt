@@ -48,6 +48,50 @@ class SupportTest {
 
 
     @Test
+    fun testSupportCalc() {
+        val ts = arrayOf(
+                arrayOf(1.BF,-1.BF),
+                arrayOf(-1.BF,1.BF)
+        )
+
+        val vg = getEquationCoefficients(
+                Array2DRowFieldMatrix(ts,false),
+                setOf(1,2),
+                setOf(1,2)
+        )
+
+        val x = makeStandardForm(vg.first)
+
+        val solution = solve(x)
+
+        println(solution.toArray().toList());
+    }
+
+
+    @Test
+    fun testRockPaperScissors() {
+        val ts = arrayOf(
+                arrayOf(0.BF,-1.BF,1.BF),
+                arrayOf(1.BF,0.BF,-1.BF),
+                arrayOf(-1.BF,1.BF,0.BF)
+        )
+
+        val vg = getEquationCoefficients(
+                Array2DRowFieldMatrix(ts,false),
+                setOf(1,2,3),
+                setOf(1,2,3)
+        )
+
+        val x = makeStandardForm(vg.first)
+
+        val solution = solve(x)
+
+        println(solution.toArray().toList());
+    }
+
+
+
+    @Test
     fun testResLargerGame() {
         val vg = getEquationCoefficients(
                 Array2DRowRealMatrix(

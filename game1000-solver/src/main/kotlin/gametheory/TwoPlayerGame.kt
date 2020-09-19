@@ -2,13 +2,23 @@ package gametheory
 
 import bimatrix.R
 import lcp.Rational
+import org.apache.commons.math3.fraction.BigFraction
+import org.apache.commons.math3.linear.Array2DRowFieldMatrix
+import utils.BF
+import utils.getEquationCoefficients
+import utils.makeStandardForm
+import utils.solve
 import java.lang.IllegalArgumentException
 import java.lang.RuntimeException
 
 /*
  * Copyright (c) Jonas Waage 04/09/2020
  */
-data class Payoff(val a : Rational,val b : Rational)
+data class Payoff(val a : Rational,val b : Rational) {
+    fun swap() : Payoff {
+        return Payoff(b,a)
+    }
+}
 
 class GameScope(private val rows : ArrayList<ArrayList<Payoff>>,
                 private val rowMapping : MutableMap<String,Int>,
@@ -35,10 +45,14 @@ class GameScope(private val rows : ArrayList<ArrayList<Payoff>>,
 }
 
 
-class RowScope(val row : ArrayList<Payoff>) {
+class RowScope(private val row : ArrayList<Payoff>) {
 
     fun p(a:Int,b:Int) {
         row.add(Payoff(a.R,b.R))
+    }
+
+    fun p(a:Int) {
+        row.add(Payoff(a.R,(-a).R))
     }
 
 }
@@ -54,8 +68,8 @@ class TwoPlayerGame private constructor(
 
     private val cols : ArrayList<ArrayList<Payoff>>
 
-    val indexToRowId : Map<Int,String> = rowMap.entries.map { i-> Pair(i.value,i.key) }.toMap()
-    val indexToColumnId : Map<Int,String> = colMap.entries.map { i-> Pair(i.value,i.key) }.toMap()
+    private val indexToRowId : Map<Int,String> = rowMap.entries.map { i-> Pair(i.value,i.key) }.toMap()
+    private val indexToColumnId : Map<Int,String> = colMap.entries.map { i-> Pair(i.value,i.key) }.toMap()
 
     companion object {
         fun create(vararg init : RowScope.() -> Unit) : TwoPlayerGame {
@@ -282,6 +296,62 @@ class TwoPlayerGame private constructor(
         }
     }
 
+    fun isZeroSum() : Boolean {
+        val bools = rows.flatMap {
+            i -> i.map {
+                j -> j.a + j.b == 0.R
+            }
+        }
+        return bools.all { it }
+    }
+
+    private fun getZeroSumMatrix() : Array2DRowFieldMatrix<BigFraction> {
+        if(!isZeroSum()) {
+            throw GameException("Matrix is not Zero sum $rows")
+        }
+
+        val vg : Array<Array<BigFraction>> = rows.map {
+            it.map { i->i.a.BF }.toTypedArray()
+        }.toTypedArray()
+
+        return Array2DRowFieldMatrix(vg,false)
+    }
+
+    private fun solveChecks() {
+        if(colMap.isEmpty() || rowMap.isEmpty()) {
+            throw GameException("Game $this should be labeled")
+        }
+        if(!isZeroSum()) {
+            throw GameException("Game $this is not zero sum")
+        }
+    }
+
+    fun solveZeroSumForRowPlayer() : List<Pair<String,BigFraction>>  {
+        solveChecks()
+        val reduced = removeAllDominatedRowsAndColumns()
+        val solution = solveZeroSumForRowPlayer(reduced);
+        return solution.mapIndexed { index, bigFraction -> Pair(reduced.getRowOrColumnId(Player.ROW,index),bigFraction) }
+    }
+
+    fun solveZeroSumForColumnPlayer() : List<Pair<String,BigFraction>>  {
+        solveChecks()
+        val swapPayoffs = cols.map { it.map { pf -> pf.swap() } };
+        val transposeGame = TwoPlayerGame(swapPayoffs,colMap,rowMap)
+        return transposeGame.solveZeroSumForRowPlayer()
+    }
+
+    private fun solveZeroSumForRowPlayer(reduced : TwoPlayerGame) : List<BigFraction> {
+        val row =  reduced.rowMap.values.map{it+1}.toSet()
+        val col =  reduced.colMap.values.map{it+1}.toSet()
+        val matrix = getEquationCoefficients(reduced.getZeroSumMatrix(),row,col)
+        val x = makeStandardForm(matrix.first)
+        val result = solve(x).toArray();
+        return result.dropLast(1)
+    }
+
+    fun playerOneSupports() : Set<Int> {
+        return rowMap.values.toSet()
+    }
 
     fun minMax(player: Player) : Rational {
         return when (player) {
@@ -313,8 +383,82 @@ class TwoPlayerGame private constructor(
     }
 
 
+
+    fun rowIsDominated(a : Int) : Boolean {
+        val check = rows.indices.toSet().minus(a)
+        val doms = check.map { row ->
+            val comp = rows[row].mapIndexed { idx, pf ->
+                rows[a][idx].a <= pf.a
+            }
+            comp.all { it }
+        }
+        return doms.any { it }
+    }
+
+    fun columnIsDominated(a : Int) : Boolean {
+        val check = cols.indices.toSet().minus(a)
+        val doms = check.map { row ->
+            val res = cols[row].mapIndexed { idx, pf ->
+                cols[a][idx].b <= pf.b
+            }
+            res.all { it }
+        }
+        return doms.any { it }
+    }
+
+
+    /**
+     * Keep removing columns and rows as long as one is dominated
+     *
+     * Can be done in a more functional style, but clearer like this I think.
+     *
+     */
+    private fun removeAllDominatedRowsAndColumns() : TwoPlayerGame {
+        var game = this;
+        do {
+            var hasDominated = false
+            for(i in game.rows.indices) {
+                if(game.rowIsDominated(i)) {
+                    hasDominated = true
+                    game = game.removeRow(i)
+                    break // Indices are bad, must break
+                }
+            }
+            for(j in game.cols.indices) {
+                if(game.columnIsDominated(j)) {
+                    hasDominated = true
+                    game = game.removeColumn(j)
+                    break  // Indices are bad, must break
+                }
+            }
+        } while (hasDominated)
+        return game
+    }
+
+
+    private fun removeRow(id : Int) : TwoPlayerGame {
+        val nextRowMap = rowMap
+                .filter { i -> i.value != id }
+                .mapValues { if(it.value > id) it.value-1 else it.value }
+        val rows = rows.filterIndexed { idx, _ -> idx != id }
+        return TwoPlayerGame(rows,nextRowMap,colMap)
+    }
+
+    private fun removeColumn(id : Int) : TwoPlayerGame {
+        val nextColMap = colMap
+                .filter { i -> i.value != id }
+                .mapValues { if(it.value > id) it.value -1 else it.value }
+        val rows = rows.map { it.filterIndexed {idx, _ -> idx != id} }
+        return TwoPlayerGame(rows,rowMap,nextColMap)
+    }
+
 }
 
 
+operator fun BigFraction.div(i: Int): BigFraction {
+    return this.divide(i.BF)
+}
 
-
+operator fun BigFraction.div(i: Long): BigFraction {
+    return this.divide(i.BF)
+}

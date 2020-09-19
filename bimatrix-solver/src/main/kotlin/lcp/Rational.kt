@@ -188,6 +188,21 @@ data class Rational(
             compareTo(Rational(othernum, BigInteger.ONE))
     }
 
+    operator fun plus(r : Rational) : Rational {
+        return this.add(r)
+    }
+
+    operator fun times(r : Rational) : Rational {
+        return this.multiply(r)
+    }
+
+    operator fun minus(r : Rational) : Rational {
+        return this.subtract(r)
+    }
+
+    operator fun unaryMinus() : Rational {
+        return this.negate()
+    }
 
     fun doubleValue(): Double {
         try {
