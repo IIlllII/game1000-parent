@@ -4,6 +4,7 @@ import bimatrix.R
 import org.junit.Test
 import utils.BF
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /*
@@ -290,7 +291,7 @@ class TwoPlayerGameTest {
         }
 
         assertTrue(game.isZeroSum())
-        assertEquals(listOf(Pair("R",1.BF/3),Pair("P",1.BF/3),Pair("S",1.BF/3)),game.solveZeroSumForRowPlayer());
+        assertEquals(setOf(Pair("R",1.BF/3),Pair("P",1.BF/3),Pair("S",1.BF/3)),game.solveZeroSumForRowPlayer());
     }
 
 
@@ -304,7 +305,7 @@ class TwoPlayerGameTest {
         }
 
         assertTrue(game.isZeroSum())
-        assertEquals(listOf(Pair("R",1.BF/2),Pair("P",1.BF/2)),game.solveZeroSumForRowPlayer());
+        assertEquals(setOf(Pair("R",1.BF/2),Pair("P",1.BF/2)),game.solveZeroSumForRowPlayer());
 
     }
 
@@ -312,32 +313,6 @@ class TwoPlayerGameTest {
 
     @Test
     fun `Exercise 9_9 solution`() {
-
-        val game = TwoPlayerGame.create {
-            columnLabels("A","B")
-            row("A") { p(2); p(3) }
-            row("B") { p(4); p(1) }
-        }
-
-        val solved = game.solveZeroSumForRowPlayer()
-        println(solved)
-
-
-        val game2 = TwoPlayerGame.create {
-            columnLabels("A","B")
-            row("A") { p(-2); p(-4) }
-            row("B") { p(-3); p(-1) }
-        }
-
-        val solved2 = game2.solveZeroSumForRowPlayer()
-        println(solved2)
-
-    }
-
-
-
-    @Test
-    fun `Exercise 9_9 full`() {
 
         val game = TwoPlayerGame.create {
             columnLabels("A","B","C")
@@ -349,8 +324,55 @@ class TwoPlayerGameTest {
         val solvedRow = game.solveZeroSumForRowPlayer()
         val solvedCol = game.solveZeroSumForColumnPlayer()
 
-        assertEquals(listOf(Pair("A",1.BF/2),Pair("C",1.BF/2)),solvedRow)
-        assertEquals(listOf(Pair("B",1.BF/2),Pair("C",1.BF/2)),solvedCol)
+        assertEquals(setOf(Pair("A",1.BF/2),Pair("C",1.BF/2)),solvedRow)
+        assertEquals(setOf(Pair("B",1.BF/2),Pair("C",1.BF/2)),solvedCol)
+
+
+    }
+
+    @Test
+    fun `Exercise 9_7 a`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("A","B")
+            row("A") { p(3); p(1) }
+            row("B") { p(5); p(4) }
+        }
+
+        assertEquals(setOf(Pair("B","B")),game.pureNashEquilibriumIds())
+
+
+    }
+
+    @Test
+    fun `Exercise 9_7 two nash equilibria`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("A","B")
+            row("A") { p(1); p(0) }
+            row("B") { p(1); p(1) }
+        }
+
+        val eqs = game.pureNashEquilibriumIds()
+        assertEquals(setOf(Pair("B","A"),Pair("B","B")),eqs)
+
+    }
+
+
+
+
+    @Test
+    fun `Exercise 9_7 strongly dominant`() {
+
+        val game = TwoPlayerGame.create {
+            columnLabels("A","B")
+            row("A") { p(3); p(1) }
+            row("B") { p(5); p(4) }
+        }
+
+        assertEquals(setOf(Pair("B","B")),game.pureNashEquilibriumIds())
+
+        assertTrue(game.isStronglyDominantStrategyEquilibrium("B","B"))
 
 
     }

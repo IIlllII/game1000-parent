@@ -120,13 +120,13 @@ class TwoPlayerGame private constructor(
         return "TwoPlayerGame(rows=$rows)"
     }
 
-    fun pureNashEquilibriumIds() : List<Pair<String,String>> {
+    fun pureNashEquilibriumIds() : Set<Pair<String,String>> {
         return pureNashEquilibriums().map {
             eq -> Pair(getRowOrColumnId(Player.ROW,eq.first),getRowOrColumnId(Player.COLUMN,eq.second))
-        }
+        }.toSet()
     }
 
-    fun pureNashEquilibriums() : List<Pair<Int,Int>> {
+    fun pureNashEquilibriums() : Set<Pair<Int,Int>> {
         return rows.indices.flatMap {i->
             cols.indices.flatMap { j->
                 if(isNashEquilibrium(i,j)) {
@@ -136,7 +136,7 @@ class TwoPlayerGame private constructor(
                     emptyList()
                 }
             }
-        }
+        }.toSet()
     }
 
     private fun conditionTrueForAll(player : Player, id: Int, condition : (Rational, Rational) -> Boolean ) : Boolean {
@@ -199,6 +199,7 @@ class TwoPlayerGame private constructor(
     fun isNashEquilibrium(row : String,col : String) : Boolean {
         return isNashEquilibrium(getRow(row),getColumn(col))
     }
+
 
     fun isNashEquilibrium(row : Int,col : Int) : Boolean {
         val r = getRow(row)
@@ -326,14 +327,14 @@ class TwoPlayerGame private constructor(
         }
     }
 
-    fun solveZeroSumForRowPlayer() : List<Pair<String,BigFraction>>  {
+    fun solveZeroSumForRowPlayer() : Set<Pair<String,BigFraction>>  {
         solveChecks()
         val reduced = removeAllDominatedRowsAndColumns()
         val solution = solveZeroSumForRowPlayer(reduced);
-        return solution.mapIndexed { index, bigFraction -> Pair(reduced.getRowOrColumnId(Player.ROW,index),bigFraction) }
+        return solution.mapIndexed { index, bigFraction -> Pair(reduced.getRowOrColumnId(Player.ROW,index),bigFraction) }.toSet()
     }
 
-    fun solveZeroSumForColumnPlayer() : List<Pair<String,BigFraction>>  {
+    fun solveZeroSumForColumnPlayer() : Set<Pair<String,BigFraction>>  {
         solveChecks()
         val swapPayoffs = cols.map { it.map { pf -> pf.swap() } };
         val transposeGame = TwoPlayerGame(swapPayoffs,colMap,rowMap)
